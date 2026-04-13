@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0a0a">
 <title>Berlin Life — Shanto's Tracker</title>
 <style>
@@ -13,7 +12,7 @@
   --bg:#0a0a0a; --surface:#141414; --surface2:#1e1e1e;
   --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
   --text:#f0ede8; --muted:#888; --accent:#b57bff; --accent2:#d4aaff;
-  --danger:#f06060; --warn:#f0b060;
+  --danger:#f06060; --warn:#f0b060; --success:#6fdf8f;
   --font:'Urbanist',sans-serif; --radius:12px; --radius-sm:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -41,7 +40,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .btn{border:none;border-radius:var(--radius-sm);padding:0 16px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;height:46px;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-secondary{background:var(--surface2);border:1px solid var(--border2);color:var(--accent);}
-.btn:active{opacity:0.8;} .btn:disabled{opacity:0.4;cursor:not-allowed;}
+.btn:active{opacity:0.8;}
 .hint-text{font-size:11px;margin-top:6px;padding-left:2px;min-height:16px;}
 .result-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:14px;display:none;}
 .result-card.visible{display:block;}
@@ -93,7 +92,6 @@ option{background:#1e1e1e;}
 .submit-btn:active{opacity:0.85;}
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;padding:12px 0 24px;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;}
-.nav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
 .nav-icon svg{width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:1.5;}
 .nav-item.active .nav-icon svg{stroke:var(--accent);}
 .nav-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
@@ -102,16 +100,58 @@ option{background:#1e1e1e;}
 .spacer{height:16px;}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#fff;font-weight:600;font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:100;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
-.toggle{width:40px;height:22px;border-radius:11px;background:var(--surface2);border:1px solid var(--border2);position:relative;transition:background 0.2s;}
-.toggle-thumb{width:16px;height:16px;border-radius:50%;background:var(--muted);position:absolute;top:2px;left:2px;transition:all 0.2s;}
+/* Dictionary item card */
+.dict-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;}
+.dict-item-top{display:flex;align-items:center;gap:10px;}
+.dict-item-icon{font-size:18px;flex-shrink:0;}
+.dict-item-info{flex:1;}
+.dict-item-name{font-size:13px;font-weight:600;}
+.dict-item-keyword{font-size:11px;color:var(--accent);margin-top:2px;}
+.dict-item-prices{display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.dict-price-box{flex:1;background:var(--surface2);border-radius:6px;padding:8px;text-align:center;}
+.dict-price-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.dict-price-val{font-size:14px;font-weight:600;}
+.dict-item-actions{display:flex;gap:8px;margin-top:8px;}
+.dict-action-btn{flex:1;padding:8px;border:1px solid var(--border2);background:transparent;border-radius:6px;color:var(--text);font-family:var(--font);font-size:12px;cursor:pointer;text-align:center;}
+.dict-action-btn.edit{color:var(--accent2);}
+.dict-action-btn.delete{color:var(--danger);}
+/* Edit modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.visible{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:16px;}
+.modal-close{float:right;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;margin-top:-2px;}
 </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <div class="modal-title">Edit Item</div>
+    <input type="hidden" id="edit-key" />
+    <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="edit-name" type="text" /></div>
+    <div class="form-group"><label class="form-label">Default BDT Price</label><input class="form-input" id="edit-bdt" type="number" /></div>
+    <div class="form-group"><label class="form-label">Berlin Price (EUR)</label><input class="form-input" id="edit-berlin" type="number" step="0.01" /></div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="edit-cat">
+        <option value="food">🍜 Food</option>
+        <option value="transport">🚲 Transport</option>
+        <option value="home">🏠 Home</option>
+        <option value="office">💼 Office</option>
+        <option value="family">👨‍👩‍👧 Family</option>
+        <option value="tools">🛠 Tools</option>
+        <option value="misc">📦 Misc</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Hint</label><input class="form-input" id="edit-hint" type="text" /></div>
+    <button class="submit-btn" onclick="saveEditItem()">Save Changes</button>
+  </div>
+</div>
 
 <!-- LOG PAGE -->
 <div class="page active" id="page-log">
@@ -132,8 +172,8 @@ option{background:#1e1e1e;}
     <div class="input-label">Quick Log — type anything</div>
     <div class="input-row">
       <input class="main-input" id="ai-input" type="text" placeholder='"singara 10 BDT" or "lunch 80tk"' oninput="liveHint(this.value)" />
-      <button class="btn btn-secondary" id="calc-btn" onclick="calculateOnly()">Calc</button>
-      <button class="btn btn-primary" id="log-btn" onclick="analyzeAndLog()">Log</button>
+      <button class="btn btn-secondary" onclick="calculateOnly()">Calc</button>
+      <button class="btn btn-primary" onclick="analyzeAndLog()">Log</button>
     </div>
     <div class="hint-text" id="live-hint"></div>
   </div>
@@ -150,7 +190,7 @@ option{background:#1e1e1e;}
     <div class="section-action" onclick="showPage('page-history')">View All →</div>
   </div>
   <div class="exp-list" id="today-list">
-    <div class="empty-state"><div class="empty-icon">🧾</div>Log your first expense above.<br>Type naturally — Gemini handles the rest.</div>
+    <div class="empty-state"><div class="empty-icon">🧾</div>Log your first expense above.<br>Type naturally — dictionary handles the rest.</div>
   </div>
 </div>
 
@@ -161,7 +201,7 @@ option{background:#1e1e1e;}
   <div class="transfer-box">
     <div class="transfer-label">Transfer to Savings</div>
     <div class="transfer-amount" id="transfer-amount">€0.00</div>
-    <div class="transfer-sub">Berlin price gap — money you saved vs Berlin prices</div>
+    <div class="transfer-sub">Berlin price gap — money saved vs Berlin prices</div>
   </div>
   <div class="month-grid">
     <div class="month-card"><div class="month-card-label">Variable Spent</div><div class="month-card-val" id="m-spent">€0.00</div></div>
@@ -203,28 +243,42 @@ option{background:#1e1e1e;}
   <div class="exp-list" id="all-list"><div class="empty-state"><div class="empty-icon">📂</div>No expenses yet.</div></div>
 </div>
 
-<!-- MY ITEMS PAGE -->
-<div class="page" id="page-items">
-  <div class="header"><div class="logo">DE<span>Life</span></div><div class="date-chip">My Items</div></div>
+<!-- DICTIONARY PAGE -->
+<div class="page" id="page-dict">
+  <div class="header"><div class="logo">DE<span>Life</span></div><div class="date-chip">Dictionary</div></div>
   <div class="spacer"></div>
   <div style="padding:0 20px 12px;">
-    <input class="main-input" id="items-search" type="text" placeholder="Search saved items..." oninput="renderItemsList(this.value)" style="width:100%;" />
+    <input class="main-input" id="dict-search" type="text" placeholder="Search items..." oninput="renderDictPage(this.value)" style="width:100%;" />
+  </div>
+  <div class="cat-tabs" id="dict-cat-tabs">
+    <div class="cat-tab active" onclick="filterDictCat('all',this)">All</div>
+    <div class="cat-tab" onclick="filterDictCat('food',this)">🍜 Food</div>
+    <div class="cat-tab" onclick="filterDictCat('transport',this)">🚲 Transport</div>
+    <div class="cat-tab" onclick="filterDictCat('home',this)">🏠 Home</div>
+    <div class="cat-tab" onclick="filterDictCat('office',this)">💼 Office</div>
+    <div class="cat-tab" onclick="filterDictCat('family',this)">👨‍👩‍👧 Family</div>
+    <div class="cat-tab" onclick="filterDictCat('tools',this)">🛠 Tools</div>
+    <div class="cat-tab" onclick="filterDictCat('misc',this)">📦 Misc</div>
   </div>
   <div class="section-head">
-    <div class="section-title" id="items-count">My Items (0)</div>
-    <div class="section-action" style="color:var(--danger);" onclick="clearAllCustom()">Clear All</div>
+    <div class="section-title" id="dict-count">All Items</div>
   </div>
-  <div class="exp-list" id="custom-items-list"></div>
+  <div style="padding:0 20px;" id="dict-list"></div>
 </div>
 
 <!-- ADD PAGE -->
 <div class="page" id="page-add">
-  <div class="header"><div class="logo">DE<span>Life</span></div><div class="date-chip">Manual Add</div></div>
+  <div class="header"><div class="logo">DE<span>Life</span></div><div class="date-chip">Add Item</div></div>
   <div class="spacer"></div>
   <div class="form-wrap">
-    <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="m-name" type="text" placeholder="e.g. Lunch, Rickshaw, Medicine" /></div>
-    <div class="form-group"><label class="form-label">Amount (BDT)</label><input class="form-input" id="m-bdt" type="number" placeholder="e.g. 80" /></div>
-    <div class="form-group"><label class="form-label">Berlin Price (EUR) — optional</label><input class="form-input" id="m-nl-price" type="number" step="0.01" placeholder="e.g. 8.50" /></div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Adding to Dictionary</div>
+      <div style="font-size:11px;color:var(--muted);">New items are saved permanently. Type the keyword in Quick Log to use them.</div>
+    </div>
+    <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" id="m-name" type="text" placeholder="e.g. Singara, Lunch, Medicine" /></div>
+    <div class="form-group"><label class="form-label">Keyword (for Quick Log)</label><input class="form-input" id="m-keyword" type="text" placeholder="e.g. singara, lunch, medicine" /></div>
+    <div class="form-group"><label class="form-label">Default BDT Price</label><input class="form-input" id="m-bdt" type="number" placeholder="e.g. 10" /></div>
+    <div class="form-group"><label class="form-label">Berlin Price (EUR)</label><input class="form-input" id="m-berlin" type="number" step="0.01" placeholder="e.g. 2.50" /></div>
     <div class="form-group">
       <label class="form-label">Category</label>
       <select class="form-select" id="m-cat">
@@ -237,22 +291,8 @@ option{background:#1e1e1e;}
         <option value="misc">📦 Misc</option>
       </select>
     </div>
-    <div class="form-group"><label class="form-label">Notes (optional)</label><input class="form-input" id="m-notes" type="text" placeholder="Any note..." /></div>
-    <div class="form-group" style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px;">
-      <div class="toggle-row" onclick="toggleSaveItem()">
-        <div>
-          <div style="font-size:13px;font-weight:600;">Save to My Items</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Quick Log will recognize this next time</div>
-        </div>
-        <div class="toggle" id="save-toggle"><div class="toggle-thumb" id="save-toggle-thumb"></div></div>
-      </div>
-      <div id="save-item-extra" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-        <label class="form-label">Keyword for Quick Log</label>
-        <input class="form-input" id="m-keyword" type="text" placeholder="e.g. lunch, singara, medicine" />
-        <div style="font-size:11px;color:var(--muted);margin-top:6px;">Type this word in Quick Log to auto-fill</div>
-      </div>
-    </div>
-    <button class="submit-btn" onclick="manualLog()">Log Expense</button>
+    <div class="form-group"><label class="form-label">Hint (optional)</label><input class="form-input" id="m-hint" type="text" placeholder="e.g. Aldi sells this for €2.50" /></div>
+    <button class="submit-btn" onclick="addDictItem()">Add to Dictionary</button>
   </div>
 </div>
 
@@ -270,8 +310,8 @@ option{background:#1e1e1e;}
     <div class="nav-icon"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
     <div class="nav-label">History</div>
   </div>
-  <div class="nav-item" onclick="showPage('page-items',this)">
-    <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+  <div class="nav-item" onclick="showPage('page-dict',this)">
+    <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
     <div class="nav-label">Items</div>
   </div>
   <div class="nav-item" onclick="showPage('page-add',this)">
@@ -285,72 +325,222 @@ const EUR_RATE = 120;
 const MONTHLY_BUDGET = 1100;
 const FIXED_COSTS = 670;
 const VARIABLE_BUDGET = MONTHLY_BUDGET - FIXED_COSTS;
-const GEMINI_KEY = 'AIzaSyAPcBKWD7xqs_TpfaPhiNtoX4XpionYRaw';
-const CAT_ICONS = { food:'🍜', transport:'🚲', home:'🏠', office:'💼', family:'👨‍👩‍👧', tools:'🛠', misc:'📦' };
+const CAT_ICONS = {food:'🍜',transport:'🚲',home:'🏠',office:'💼',family:'👨‍👩‍👧',tools:'🛠',misc:'📦'};
+
+// ── BUILT-IN DICTIONARY (Berlin prices) ──────────────────
+const BUILT_IN = {
+  // STREET FOOD & SNACKS
+  singara:     {name:'Singara',         defaultBDT:10,  berlinPrice:2.50, category:'food',      hint:'Samosa at Asian/Turkish shop ~€2.50'},
+  samosa:      {name:'Samosa',          defaultBDT:10,  berlinPrice:2.50, category:'food',      hint:'Asian shop samosa ~€2.50'},
+  puri:        {name:'Puri',            defaultBDT:10,  berlinPrice:2.00, category:'food',      hint:'Indian restaurant puri ~€2'},
+  jhalmuri:    {name:'Jhal Muri',       defaultBDT:20,  berlinPrice:3.50, category:'food',      hint:'No direct equivalent — Indian snack mix ~€3.50'},
+  fuchka:      {name:'Fuchka',          defaultBDT:30,  berlinPrice:4.00, category:'food',      hint:'Pani puri at Indian restaurant ~€4'},
+  chotpoti:    {name:'Chotpoti',        defaultBDT:40,  berlinPrice:5.00, category:'food',      hint:'No direct equivalent — street food ~€5'},
+  halim:       {name:'Halim',           defaultBDT:60,  berlinPrice:6.00, category:'food',      hint:'Turkish lentil soup ~€4-6'},
+  biscuit:     {name:'Biscuit/Cookies', defaultBDT:30,  berlinPrice:1.50, category:'food',      hint:'Aldi/Lidl biscuits ~€1-2'},
+  chips:       {name:'Chips/Crisps',    defaultBDT:30,  berlinPrice:1.50, category:'food',      hint:'Aldi chips ~€1-2'},
+  chocolate:   {name:'Chocolate',       defaultBDT:50,  berlinPrice:1.50, category:'food',      hint:'Aldi/Lidl chocolate ~€1-2'},
+  cake:        {name:'Cake/Pastry',     defaultBDT:50,  berlinPrice:2.50, category:'food',      hint:'Berlin bakery pastry ~€2-3'},
+  // MEALS
+  breakfast:   {name:'Breakfast',       defaultBDT:60,  berlinPrice:5.00, category:'food',      hint:'Home breakfast ~€3, café ~€8'},
+  lunch:       {name:'Lunch',           defaultBDT:80,  berlinPrice:7.00, category:'food',      hint:'Berlin budget lunch ~€6-9'},
+  dinner:      {name:'Dinner',          defaultBDT:100, berlinPrice:9.00, category:'food',      hint:'Home cooked ~€5, restaurant ~€12-15'},
+  rice:        {name:'Rice meal',       defaultBDT:80,  berlinPrice:7.00, category:'food',      hint:'Turkish/Asian restaurant rice ~€7'},
+  roti:        {name:'Roti/Chapati',    defaultBDT:20,  berlinPrice:2.50, category:'food',      hint:'Turkish bakery flatbread ~€2-3'},
+  paratha:     {name:'Paratha',         defaultBDT:20,  berlinPrice:3.00, category:'food',      hint:'Indian restaurant paratha ~€3'},
+  biriyani:    {name:'Biriyani',        defaultBDT:120, berlinPrice:10.00,category:'food',      hint:'Indian restaurant biryani ~€10-13'},
+  biryani:     {name:'Biryani',         defaultBDT:120, berlinPrice:10.00,category:'food',      hint:'Indian restaurant biryani ~€10-13'},
+  khichuri:    {name:'Khichuri',        defaultBDT:60,  berlinPrice:5.00, category:'food',      hint:'Home cooked lentil rice ~€5'},
+  pizza:       {name:'Pizza',           defaultBDT:200, berlinPrice:8.00, category:'food',      hint:'Lidl frozen pizza ~€3, takeaway ~€8'},
+  burger:      {name:'Burger',          defaultBDT:150, berlinPrice:6.00, category:'food',      hint:'Budget burger Berlin ~€5-7'},
+  sandwich:    {name:'Sandwich',        defaultBDT:80,  berlinPrice:4.00, category:'food',      hint:'Berlin bakery sandwich ~€3-5'},
+  noodles:     {name:'Noodles',         defaultBDT:60,  berlinPrice:5.00, category:'food',      hint:'Asian noodle restaurant ~€7, instant ~€0.50'},
+  soup:        {name:'Soup',            defaultBDT:40,  berlinPrice:3.50, category:'food',      hint:'Supermarket soup ~€2-4'},
+  // DRINKS
+  tea:         {name:'Tea/Cha',         defaultBDT:10,  berlinPrice:2.50, category:'food',      hint:'Café tea ~€2-3'},
+  cha:         {name:'Cha/Tea',         defaultBDT:10,  berlinPrice:2.50, category:'food',      hint:'Café tea ~€2-3'},
+  coffee:      {name:'Coffee',          defaultBDT:30,  berlinPrice:3.00, category:'food',      hint:'Berlin café coffee ~€2.50-4'},
+  juice:       {name:'Juice',           defaultBDT:30,  berlinPrice:2.00, category:'food',      hint:'Supermarket juice ~€1.50-2.50'},
+  water:       {name:'Water bottle',    defaultBDT:20,  berlinPrice:0.50, category:'food',      hint:'Aldi water bottle ~€0.25-0.50'},
+  cola:        {name:'Cola/Soft drink', defaultBDT:30,  berlinPrice:1.00, category:'food',      hint:'Supermarket can ~€0.50-1'},
+  lassi:       {name:'Lassi',           defaultBDT:40,  berlinPrice:3.50, category:'food',      hint:'Indian restaurant lassi ~€3-4'},
+  milk:        {name:'Milk (1L)',        defaultBDT:70,  berlinPrice:1.20, category:'food',      hint:'Aldi 1L milk ~€1-1.20'},
+  // FRUITS
+  banana:      {name:'Banana',          defaultBDT:10,  berlinPrice:0.30, category:'food',      hint:'Aldi/Lidl banana ~€0.29 each'},
+  bananas:     {name:'Bananas (bunch)', defaultBDT:50,  berlinPrice:1.50, category:'food',      hint:'Aldi bunch of 6 ~€1.29-1.79'},
+  apple:       {name:'Apple',           defaultBDT:20,  berlinPrice:0.40, category:'food',      hint:'Aldi apple ~€0.35-0.50 each'},
+  mango:       {name:'Mango',           defaultBDT:40,  berlinPrice:1.00, category:'food',      hint:'Aldi/Lidl mango ~€0.79-1.29'},
+  orange:      {name:'Orange',          defaultBDT:20,  berlinPrice:0.50, category:'food',      hint:'Aldi orange ~€0.40-0.60'},
+  grapes:      {name:'Grapes',          defaultBDT:80,  berlinPrice:2.50, category:'food',      hint:'Aldi 500g grapes ~€2-3'},
+  watermelon:  {name:'Watermelon',      defaultBDT:60,  berlinPrice:3.00, category:'food',      hint:'Lidl whole watermelon ~€2.50-4'},
+  fruit:       {name:'Fruit',           defaultBDT:50,  berlinPrice:2.00, category:'food',      hint:'Mixed fruit ~€2-3'},
+  // GROCERIES
+  egg:         {name:'Eggs (10)',        defaultBDT:120, berlinPrice:2.50, category:'food',      hint:'Aldi 10 eggs ~€2-2.50'},
+  eggs:        {name:'Eggs (10)',        defaultBDT:120, berlinPrice:2.50, category:'food',      hint:'Aldi 10 eggs ~€2-2.50'},
+  vegetable:   {name:'Vegetables',      defaultBDT:60,  berlinPrice:2.50, category:'food',      hint:'Wochenmarkt/Aldi veg ~€2-4'},
+  vegetables:  {name:'Vegetables',      defaultBDT:60,  berlinPrice:2.50, category:'food',      hint:'Wochenmarkt/Aldi veg ~€2-4'},
+  fish:        {name:'Fish',            defaultBDT:150, berlinPrice:6.00, category:'food',      hint:'Aldi/Lidl frozen fish ~€5-8/kg'},
+  chicken:     {name:'Chicken (1kg)',   defaultBDT:200, berlinPrice:5.00, category:'food',      hint:'Aldi/Lidl chicken ~€5-7/kg'},
+  meat:        {name:'Meat (1kg)',       defaultBDT:300, berlinPrice:9.00, category:'food',      hint:'Aldi beef/pork ~€8-12/kg'},
+  bread:       {name:'Bread',           defaultBDT:50,  berlinPrice:1.50, category:'food',      hint:'Aldi/Lidl bread ~€1-2'},
+  oil:         {name:'Cooking oil (1L)',defaultBDT:180, berlinPrice:2.00, category:'food',      hint:'Aldi sunflower oil ~€1.50-2.50'},
+  sugar:       {name:'Sugar (1kg)',     defaultBDT:80,  berlinPrice:1.00, category:'food',      hint:'Aldi sugar ~€0.79-1'},
+  dal:         {name:'Dal/Lentils',     defaultBDT:100, berlinPrice:1.50, category:'food',      hint:'Aldi lentils ~€1.50/kg'},
+  lentils:     {name:'Lentils',         defaultBDT:100, berlinPrice:1.50, category:'food',      hint:'Aldi lentils ~€1.50/kg'},
+  onion:       {name:'Onion (1kg)',     defaultBDT:50,  berlinPrice:1.00, category:'food',      hint:'Aldi onion ~€0.79-1'},
+  potato:      {name:'Potato (1kg)',    defaultBDT:40,  berlinPrice:1.00, category:'food',      hint:'Aldi potato ~€0.89-1.29'},
+  grocery:     {name:'Groceries',       defaultBDT:300, berlinPrice:20.00,category:'food',      hint:'Aldi weekly shop ~€20-40'},
+  groceries:   {name:'Groceries',       defaultBDT:300, berlinPrice:20.00,category:'food',      hint:'Aldi weekly shop ~€20-40'},
+  bazaar:      {name:'Market run',      defaultBDT:400, berlinPrice:25.00,category:'food',      hint:'Aldi/Wochenmarkt run ~€25-40'},
+  bazar:       {name:'Market run',      defaultBDT:400, berlinPrice:25.00,category:'food',      hint:'Aldi/Wochenmarkt run ~€25-40'},
+  // TRANSPORT
+  rickshaw:    {name:'Rickshaw',        defaultBDT:30,  berlinPrice:3.50, category:'transport', hint:'BVG single ticket ~€3.50'},
+  cng:         {name:'CNG/Auto',        defaultBDT:60,  berlinPrice:8.00, category:'transport', hint:'Berlin short taxi ~€8-12'},
+  bus:         {name:'Bus',             defaultBDT:20,  berlinPrice:3.50, category:'transport', hint:'BVG single ticket ~€3.50'},
+  uber:        {name:'Uber',            defaultBDT:150, berlinPrice:12.00,category:'transport', hint:'Berlin Uber short trip ~€10-15'},
+  pathao:      {name:'Pathao/Bike ride',defaultBDT:60,  berlinPrice:5.00, category:'transport', hint:'Berlin short taxi ~€5-8'},
+  taxi:        {name:'Taxi',            defaultBDT:200, berlinPrice:15.00,category:'transport', hint:'Berlin taxi ~€3.90 start + €2/km'},
+  train:       {name:'Train',           defaultBDT:100, berlinPrice:3.50, category:'transport', hint:'BVG S-Bahn/U-Bahn ~€3.50'},
+  // OFFICE
+  print:       {name:'Printing',        defaultBDT:20,  berlinPrice:0.50, category:'office',    hint:'Berlin copy shop ~€0.10-0.15/page'},
+  printing:    {name:'Printing',        defaultBDT:20,  berlinPrice:0.50, category:'office',    hint:'Berlin copy shop ~€0.10-0.15/page'},
+  stationery:  {name:'Stationery',      defaultBDT:100, berlinPrice:5.00, category:'office',    hint:'dm/Müller stationery ~€3-8'},
+  internet:    {name:'Internet/Data',   defaultBDT:200, berlinPrice:10.00,category:'office',    hint:'Aldi Talk prepaid data ~€10-15'},
+  // TOOLS & SUBSCRIPTIONS
+  figma:       {name:'Figma Pro',       defaultBDT:1500,berlinPrice:12.00,category:'tools',     hint:'Figma Pro ~$12/month globally'},
+  notion:      {name:'Notion Plus',     defaultBDT:600, berlinPrice:5.00, category:'tools',     hint:'Notion Plus ~$5/month globally'},
+  netflix:     {name:'Netflix',         defaultBDT:600, berlinPrice:13.00,category:'tools',     hint:'Netflix Standard ~€13/month'},
+  spotify:     {name:'Spotify',         defaultBDT:300, berlinPrice:11.00,category:'tools',     hint:'Spotify Premium ~€11/month'},
+  // HOME & PERSONAL
+  medicine:    {name:'Medicine',        defaultBDT:100, berlinPrice:6.00, category:'home',      hint:'dm/Rossmann pharmacy ~€5-10'},
+  doctor:      {name:'Doctor visit',    defaultBDT:300, berlinPrice:0.00, category:'home',      hint:'Berlin GP free with Krankenkasse insurance'},
+  haircut:     {name:'Haircut',         defaultBDT:80,  berlinPrice:15.00,category:'home',      hint:'Berlin barber ~€12-20'},
+  laundry:     {name:'Laundry',         defaultBDT:100, berlinPrice:5.00, category:'home',      hint:'Berlin laundromat ~€4-6 per load'},
+  soap:        {name:'Soap/Toiletries', defaultBDT:80,  berlinPrice:2.50, category:'home',      hint:'dm/Rossmann toiletries ~€2-4'},
+  shampoo:     {name:'Shampoo',         defaultBDT:150, berlinPrice:3.00, category:'home',      hint:'dm shampoo ~€2-4'},
+  toothpaste:  {name:'Toothpaste',      defaultBDT:60,  berlinPrice:2.00, category:'home',      hint:'dm toothpaste ~€1.50-3'},
+  detergent:   {name:'Detergent',       defaultBDT:150, berlinPrice:4.00, category:'home',      hint:'Aldi/Lidl detergent ~€3-5'},
+  rent:        {name:'Room Rent',       defaultBDT:48000,berlinPrice:400.00,category:'home',    hint:'Berlin shared room ~€400/month'},
+  phone:       {name:'Phone bill',      defaultBDT:300, berlinPrice:10.00,category:'home',      hint:'Aldi Talk/Lidl Connect ~€10-15/month'},
+  gym:         {name:'Gym',             defaultBDT:500, berlinPrice:20.00,category:'misc',      hint:'McFit Berlin ~€19.90/month'},
+  // FAMILY
+  family:      {name:'Family expense',  defaultBDT:500, berlinPrice:40.00,category:'family',    hint:'Estimated family support'},
+  gift:        {name:'Gift',            defaultBDT:300, berlinPrice:15.00,category:'family',    hint:'Berlin gift shop ~€15-25'},
+  // MISC
+  mobile:      {name:'Mobile recharge', defaultBDT:100, berlinPrice:10.00,category:'misc',      hint:'Aldi Talk top-up ~€10'},
+  recharge:    {name:'Mobile recharge', defaultBDT:100, berlinPrice:10.00,category:'misc',      hint:'Aldi Talk top-up ~€10'},
+  book:        {name:'Book',            defaultBDT:200, berlinPrice:12.00,category:'misc',      hint:'Berlin bookstore ~€10-15'},
+};
 
 let expenses = JSON.parse(localStorage.getItem('de_expenses') || '[]');
 let pendingExpense = null;
-let saveItemOn = false;
+let dictCatFilter = 'all';
 
-async function callGemini(input) {
-  const prompt = `You are an expense analyzer for Shanto, a Bangladeshi freelancer simulating life in Berlin, Germany.
-Convert this expense and compare with realistic Berlin prices.
-EUR to BDT rate: 1 EUR = 120 BDT.
-Input: "${input}"
-Respond ONLY with valid JSON, no markdown:
-{"name":"item name in English","bdt":<number>,"eur_actual":<bdt/120, 2 decimals>,"eur_berlin_price":<realistic Berlin EUR price>,"eur_gap":<berlin_price minus actual, min 0>,"category":"food|transport|home|office|family|tools|misc","hint":"one line: Berlin price and where to buy cheap (Lidl, Aldi, Rewe, Netto etc)"}
-Use Lidl/Aldi prices for food. If amount not stated, guess a typical Bangladesh price.`;
-  const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1}})
-  });
-  const data = await resp.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-  return JSON.parse(text.replace(/```json|```/g,'').trim());
+function getHiddenItems() {
+  return JSON.parse(localStorage.getItem('de_hidden_items') || '[]');
 }
 
-function setLoading(on) {
-  document.getElementById('log-btn').disabled = on;
-  document.getElementById('calc-btn').disabled = on;
-  document.getElementById('log-btn').innerHTML = on ? '<div class="spinner"></div>' : 'Log';
+function hideBuiltInItem(key) {
+  const hidden = getHiddenItems();
+  if (!hidden.includes(key)) hidden.push(key);
+  localStorage.setItem('de_hidden_items', JSON.stringify(hidden));
 }
 
-async function calculateOnly() {
+// Get merged dictionary (built-in + user edits, minus hidden)
+function getDictionary() {
+  const userEdits = JSON.parse(localStorage.getItem('de_dict_edits') || '{}');
+  const hidden = getHiddenItems();
+  const merged = {};
+  for (const k of Object.keys(BUILT_IN)) {
+    if (hidden.includes(k)) continue;
+    merged[k] = userEdits[k] ? {...BUILT_IN[k], ...userEdits[k]} : {...BUILT_IN[k]};
+  }
+  const custom = JSON.parse(localStorage.getItem('de_custom_items') || '{}');
+  for (const k of Object.keys(custom)) {
+    merged[k] = custom[k];
+  }
+  return merged;
+}
+
+function saveUserEdit(key, item) {
+  const edits = JSON.parse(localStorage.getItem('de_dict_edits') || '{}');
+  edits[key] = item;
+  localStorage.setItem('de_dict_edits', JSON.stringify(edits));
+}
+
+function isCustomItem(key) {
+  const custom = JSON.parse(localStorage.getItem('de_custom_items') || '{}');
+  return !!custom[key];
+}
+
+function deleteCustomItem(key) {
+  const custom = JSON.parse(localStorage.getItem('de_custom_items') || '{}');
+  delete custom[key];
+  localStorage.setItem('de_custom_items', JSON.stringify(custom));
+}
+
+// ── PARSE INPUT ──────────────────────────────────────────
+function parseInput(input) {
+  const raw = input.toLowerCase().trim();
+  const amountMatch = raw.match(/(\d+\.?\d*)\s*(bdt|tk|taka|৳)?/) ||
+                      raw.match(/(bdt|tk|taka|৳)\s*(\d+\.?\d*)/);
+  let bdt = null;
+  if (amountMatch) bdt = parseFloat(amountMatch[1]) || parseFloat(amountMatch[2]);
+
+  const dict = getDictionary();
+  let matched = null;
+  const words = raw.replace(/[\d.]/g,'').replace(/(bdt|tk|taka|৳)/g,'').trim().split(/\s+/);
+  for (const w of words) { if (dict[w]) { matched = dict[w]; break; } }
+  if (!matched) { for (const k of Object.keys(dict)) { if (raw.includes(k)) { matched = dict[k]; break; } } }
+
+  if (!matched) {
+    const cleanName = raw.replace(/[\d.]/g,'').replace(/(bdt|tk|taka|৳)/g,'').trim();
+    matched = {
+      name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1) || 'Expense',
+      defaultBDT:50, berlinPrice:4.00, category:'misc',
+      hint:'Unknown item — Berlin price estimated. Add it via Add tab.'
+    };
+  }
+
+  const finalBDT = bdt || matched.defaultBDT;
+  const eur_actual = finalBDT / EUR_RATE;
+  const baseberlinPrice = matched.berlinPrice || matched.nlPrice || 0;
+  // Scale Berlin price proportionally to quantity
+  const quantity = finalBDT / matched.defaultBDT;
+  const eur_berlin_price = baseberlinPrice * quantity;
+  const eur_gap = Math.max(0, eur_berlin_price - eur_actual);
+
+  return { name:matched.name, bdt:finalBDT, eur_actual, eur_berlin_price, eur_gap,
+    category:matched.category, hint:matched.hint };
+}
+
+// ── QUICK LOG ────────────────────────────────────────────
+function calculateOnly() {
   const input = document.getElementById('ai-input').value.trim();
   if (!input) return;
-  setLoading(true);
-  try {
-    const r = await callGemini(input);
-    pendingExpense = {...r, raw:input, date:new Date().toISOString()};
-    showResult(r);
-    document.getElementById('confirm-btn').textContent = '✓ Log This Expense';
-  } catch(e) { showToast('Error — check connection'); }
-  setLoading(false);
+  const r = parseInput(input);
+  pendingExpense = {...r, raw:input, date:new Date().toISOString()};
+  showResult(r);
+  document.getElementById('confirm-btn').textContent = '✓ Log This Expense';
 }
 
-async function analyzeAndLog() {
+function analyzeAndLog() {
   const input = document.getElementById('ai-input').value.trim();
   if (!input) return;
-  setLoading(true);
-  try {
-    const r = await callGemini(input);
-    pendingExpense = {...r, raw:input, date:new Date().toISOString()};
-    showResult(r);
-    document.getElementById('confirm-btn').textContent = '✓ Confirm & Log This Expense';
-  } catch(e) { showToast('Error — check connection'); }
-  setLoading(false);
+  const r = parseInput(input);
+  pendingExpense = {...r, raw:input, date:new Date().toISOString()};
+  showResult(r);
+  document.getElementById('confirm-btn').textContent = '✓ Confirm & Log This Expense';
 }
 
 function showResult(r) {
   document.getElementById('res-name').textContent = r.name;
   document.getElementById('res-eur').textContent = '€' + r.eur_actual.toFixed(2);
-  const bp = r.eur_berlin_price || 0;
-  const gap = r.eur_gap || 0;
   document.getElementById('res-breakdown').innerHTML =
     `<div>৳${r.bdt} ÷ 120 = <span class="hi">€${r.eur_actual.toFixed(2)}</span></div>
-     <div class="hi">In Berlin this costs ~€${bp.toFixed(2)}</div>
+     <div class="hi">In Berlin this costs ~€${r.eur_berlin_price.toFixed(2)}</div>
      <div>${r.hint||''}</div>
-     <div style="margin-top:8px">You save: <span class="hi">€${gap.toFixed(2)}</span> vs Berlin · ${CAT_ICONS[r.category]||'📦'} ${r.category}</div>`;
+     <div style="margin-top:8px">You save: <span class="hi">€${r.eur_gap.toFixed(2)}</span> vs Berlin · ${CAT_ICONS[r.category]||'📦'} ${r.category}</div>`;
   document.getElementById('result-card').classList.add('visible');
 }
 
@@ -369,88 +559,143 @@ function confirmLog() {
 function liveHint(val) {
   const el = document.getElementById('live-hint');
   if (!val.trim()) { el.textContent = ''; return; }
-  const raw = val.toLowerCase().replace(/[0-9]/g,'').replace(/(bdt|tk|taka|৳)/g,'').trim();
-  const custom = getCustomItems();
+  const raw = val.toLowerCase().replace(/[\d.]/g,'').replace(/(bdt|tk|taka|৳)/g,'').trim();
+  const dict = getDictionary();
   let found = null;
-  for (const w of raw.split(/\s+/)) { if (custom[w]) { found = custom[w]; break; } }
-  if (!found) for (const k of Object.keys(custom)) { if (raw.includes(k)) { found = custom[k]; break; } }
+  for (const w of raw.split(/\s+/)) { if (dict[w]) { found = {key:w, ...dict[w]}; break; } }
+  if (!found) { for (const k of Object.keys(dict)) { if (raw.includes(k)) { found = {key:k, ...dict[k]}; break; } } }
   if (found) {
-    el.innerHTML = `<span style="color:var(--accent)">✓ Found in My Items — ${found.name}</span> <span style="color:var(--muted)">· Berlin ~€${found.nlPrice.toFixed(2)}</span>`;
+    el.innerHTML = `<span style="color:var(--accent)">✓ ${found.name}</span> <span style="color:var(--muted)">· Berlin ~€${(found.berlinPrice||found.nlPrice||0).toFixed(2)}</span>`;
   } else {
-    el.innerHTML = `<span style="color:var(--muted)">Gemini will calculate Berlin price automatically</span>`;
+    el.innerHTML = `<span style="color:var(--warn)">⚠ Not in dictionary — will estimate. Add it via Add tab.</span>`;
   }
 }
 
-function toggleSaveItem() {
-  saveItemOn = !saveItemOn;
-  document.getElementById('save-toggle').style.background = saveItemOn ? 'var(--accent)' : 'var(--surface2)';
-  document.getElementById('save-toggle-thumb').style.left = saveItemOn ? '20px' : '2px';
-  document.getElementById('save-toggle-thumb').style.background = saveItemOn ? '#fff' : 'var(--muted)';
-  document.getElementById('save-item-extra').style.display = saveItemOn ? 'block' : 'none';
-}
-
-function manualLog() {
+// ── ADD TO DICTIONARY ─────────────────────────────────────
+function addDictItem() {
   const name = document.getElementById('m-name').value.trim();
+  const keyword = document.getElementById('m-keyword').value.trim().toLowerCase();
   const bdt = parseFloat(document.getElementById('m-bdt').value);
-  const nlPrice = parseFloat(document.getElementById('m-nl-price').value) || null;
+  const berlin = parseFloat(document.getElementById('m-berlin').value);
   const cat = document.getElementById('m-cat').value;
-  const notes = document.getElementById('m-notes').value.trim();
-  if (!name || !bdt) { showToast('Name & BDT required'); return; }
-  const eur_actual = bdt / EUR_RATE;
-  const eur_berlin_price = nlPrice || eur_actual * 3;
-  const eur_gap = Math.max(0, eur_berlin_price - eur_actual);
-  if (saveItemOn) {
-    const kw = document.getElementById('m-keyword').value.trim() || name.toLowerCase();
-    saveCustomItem(kw, {name, defaultBDT:bdt, nlPrice:eur_berlin_price, category:cat, hint:`Saved item — Berlin ~€${eur_berlin_price.toFixed(2)}`});
-    showToast(`Saved "${kw}" to My Items ✓`);
-    saveItemOn = false; toggleSaveItem();
-  }
-  expenses.push({name, bdt, eur_actual, eur_gap, eur_berlin_price, category:cat, breakdown:notes, date:new Date().toISOString()});
-  saveExpenses();
-  ['m-name','m-bdt','m-nl-price','m-notes','m-keyword'].forEach(id => document.getElementById(id).value = '');
-  refreshAll();
-  showToast('Logged ✓');
-  showPage('page-log', document.querySelector('.nav-item'));
+  const hint = document.getElementById('m-hint').value.trim();
+  if (!name || !keyword || !bdt || !berlin) { showToast('All fields required'); return; }
+  const custom = JSON.parse(localStorage.getItem('de_custom_items') || '{}');
+  custom[keyword] = {name, defaultBDT:bdt, berlinPrice:berlin, category:cat, hint:hint||`Custom item — Berlin ~€${berlin}`};
+  localStorage.setItem('de_custom_items', JSON.stringify(custom));
+  ['m-name','m-keyword','m-hint'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m-bdt').value = '';
+  document.getElementById('m-berlin').value = '';
+  showToast(`Added "${name}" to dictionary ✓`);
+  showPage('page-dict', document.querySelectorAll('.nav-item')[3]);
 }
 
-function getCustomItems() { return JSON.parse(localStorage.getItem('de_custom_items') || '{}'); }
-function saveCustomItem(kw, item) {
-  const items = getCustomItems();
-  items[kw.toLowerCase().trim()] = item;
-  localStorage.setItem('de_custom_items', JSON.stringify(items));
-}
-function deleteCustomItem(kw) {
-  const items = getCustomItems(); delete items[kw];
-  localStorage.setItem('de_custom_items', JSON.stringify(items));
-  renderItemsList(document.getElementById('items-search').value);
-  showToast(`Deleted "${kw}"`);
-}
-function clearAllCustom() {
-  if (!Object.keys(getCustomItems()).length) { showToast('No items to clear'); return; }
-  localStorage.removeItem('de_custom_items');
-  renderItemsList(''); showToast('Cleared');
-}
-function renderItemsList(search) {
+// ── DICTIONARY PAGE ───────────────────────────────────────
+function renderDictPage(search) {
   const q = (search||'').toLowerCase();
-  const custom = getCustomItems();
-  const keys = Object.keys(custom).filter(k => !q || k.includes(q) || custom[k].name.toLowerCase().includes(q));
-  document.getElementById('items-count').textContent = `My Items (${keys.length})`;
-  const el = document.getElementById('custom-items-list');
+  const dict = getDictionary();
+  const keys = Object.keys(dict).filter(k => {
+    const matchSearch = !q || k.includes(q) || dict[k].name.toLowerCase().includes(q);
+    const matchCat = dictCatFilter === 'all' || dict[k].category === dictCatFilter;
+    return matchSearch && matchCat;
+  });
+  document.getElementById('dict-count').textContent = `${keys.length} items`;
+  const el = document.getElementById('dict-list');
   if (!keys.length) {
-    el.innerHTML = '<div class="empty-state" style="padding:16px 0">No saved items yet.<br>Add via Add tab with Save to My Items toggled on.</div>';
+    el.innerHTML = '<div class="empty-state" style="padding:20px">No items found.</div>';
     return;
   }
   el.innerHTML = keys.map(k => {
-    const i = custom[k];
-    return `<div class="exp-item">
-      <div class="exp-icon">${CAT_ICONS[i.category]||'📦'}</div>
-      <div class="exp-info"><div class="exp-name">${i.name}</div>
-        <div class="exp-meta">keyword: <span style="color:var(--accent)">${k}</span> · ৳${i.defaultBDT} · Berlin €${i.nlPrice.toFixed(2)}</div></div>
-      <div class="exp-amounts"><div style="font-size:11px;color:var(--danger);cursor:pointer;" onclick="deleteCustomItem('${k}')">Delete</div></div>
+    const item = dict[k];
+    const bp = item.berlinPrice || item.nlPrice || 0;
+    const isCustom = isCustomItem(k);
+    return `<div class="dict-item">
+      <div class="dict-item-top">
+        <div class="dict-item-icon">${CAT_ICONS[item.category]||'📦'}</div>
+        <div class="dict-item-info">
+          <div class="dict-item-name">${item.name} ${isCustom ? '<span style="font-size:10px;color:var(--accent2);background:rgba(181,123,255,0.15);padding:2px 6px;border-radius:10px;">custom</span>' : ''}</div>
+          <div class="dict-item-keyword">keyword: ${k}</div>
+        </div>
+      </div>
+      <div class="dict-item-prices">
+        <div class="dict-price-box">
+          <div class="dict-price-label">Default BDT</div>
+          <div class="dict-price-val">৳${item.defaultBDT}</div>
+        </div>
+        <div class="dict-price-box">
+          <div class="dict-price-label">Berlin Price</div>
+          <div class="dict-price-val" style="color:var(--accent)">€${bp.toFixed(2)}</div>
+        </div>
+        <div class="dict-price-box">
+          <div class="dict-price-label">You Save</div>
+          <div class="dict-price-val" style="color:var(--success)">€${Math.max(0,bp - item.defaultBDT/EUR_RATE).toFixed(2)}</div>
+        </div>
+      </div>
+      <div class="dict-item-actions">
+        <button class="dict-action-btn edit" onclick="openEditModal('${k}')">✏️ Edit</button>
+        <button class="dict-action-btn delete" onclick="confirmDeleteItem('${k}')">🗑 Delete</button>
+      </div>
     </div>`;
   }).join('');
 }
 
+function filterDictCat(cat, el) {
+  dictCatFilter = cat;
+  document.querySelectorAll('#dict-cat-tabs .cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderDictPage(document.getElementById('dict-search').value);
+}
+
+// ── EDIT MODAL ────────────────────────────────────────────
+function openEditModal(key) {
+  const dict = getDictionary();
+  const item = dict[key];
+  if (!item) return;
+  document.getElementById('edit-key').value = key;
+  document.getElementById('edit-name').value = item.name;
+  document.getElementById('edit-bdt').value = item.defaultBDT;
+  document.getElementById('edit-berlin').value = item.berlinPrice || item.nlPrice || 0;
+  document.getElementById('edit-cat').value = item.category;
+  document.getElementById('edit-hint').value = item.hint || '';
+  document.getElementById('edit-modal').classList.add('visible');
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('visible');
+}
+
+function saveEditItem() {
+  const key = document.getElementById('edit-key').value;
+  const name = document.getElementById('edit-name').value.trim();
+  const bdt = parseFloat(document.getElementById('edit-bdt').value);
+  const berlin = parseFloat(document.getElementById('edit-berlin').value);
+  const cat = document.getElementById('edit-cat').value;
+  const hint = document.getElementById('edit-hint').value.trim();
+  if (!name || !bdt || !berlin) { showToast('All fields required'); return; }
+  const updatedItem = {name, defaultBDT:bdt, berlinPrice:berlin, category:cat, hint};
+  if (isCustomItem(key)) {
+    const custom = JSON.parse(localStorage.getItem('de_custom_items') || '{}');
+    custom[key] = updatedItem;
+    localStorage.setItem('de_custom_items', JSON.stringify(custom));
+  } else {
+    saveUserEdit(key, updatedItem);
+  }
+  closeEditModal();
+  renderDictPage(document.getElementById('dict-search').value);
+  showToast(`Updated "${name}" ✓`);
+}
+
+function confirmDeleteItem(key) {
+  if (isCustomItem(key)) {
+    deleteCustomItem(key);
+  } else {
+    hideBuiltInItem(key);
+  }
+  renderDictPage(document.getElementById('dict-search').value);
+  showToast('Item deleted');
+}
+
+// ── STORAGE & RENDER ──────────────────────────────────────
 function saveExpenses() { localStorage.setItem('de_expenses', JSON.stringify(expenses)); }
 function today() { return new Date().toDateString(); }
 function thisMonth() { const n=new Date(); return `${n.getFullYear()}-${n.getMonth()}`; }
@@ -459,13 +704,13 @@ function getMonth(d) { const n=new Date(d); return `${n.getFullYear()}-${n.getMo
 function refreshAll() {
   const todayExp = expenses.filter(e => new Date(e.date).toDateString() === today());
   const monthExp = expenses.filter(e => getMonth(e.date) === thisMonth());
-  const todayTotal = todayExp.reduce((s,e) => s+e.eur_actual, 0);
-  const monthTotal = monthExp.reduce((s,e) => s+e.eur_actual, 0);
-  const monthGap = monthExp.reduce((s,e) => s+(e.eur_gap||0), 0);
+  const todayTotal = todayExp.reduce((s,e)=>s+e.eur_actual,0);
+  const monthTotal = monthExp.reduce((s,e)=>s+e.eur_actual,0);
+  const monthGap = monthExp.reduce((s,e)=>s+(e.eur_gap||0),0);
   document.getElementById('stat-today').textContent = '€'+todayTotal.toFixed(2);
   document.getElementById('stat-month').textContent = '€'+monthTotal.toFixed(2);
   document.getElementById('stat-saved').textContent = '€'+monthGap.toFixed(2);
-  const pct = Math.min((monthTotal/VARIABLE_BUDGET)*100, 100);
+  const pct = Math.min((monthTotal/VARIABLE_BUDGET)*100,100);
   const fill = document.getElementById('budget-bar-fill');
   fill.style.width = pct.toFixed(0)+'%';
   fill.className = 'budget-bar-fill'+(pct>90?' danger':pct>70?' warn':'');
@@ -489,7 +734,7 @@ function expHTML(e) {
 function renderTodayList(items) {
   document.getElementById('today-list').innerHTML = items.length
     ? [...items].reverse().map(expHTML).join('')
-    : '<div class="empty-state"><div class="empty-icon">🧾</div>Log your first expense above.<br>Type naturally — Gemini handles the rest.</div>';
+    : '<div class="empty-state"><div class="empty-icon">🧾</div>Log your first expense above.<br>Type naturally — dictionary handles the rest.</div>';
 }
 
 function renderAllList(cat) {
@@ -500,7 +745,7 @@ function renderAllList(cat) {
 }
 
 function filterCat(cat, el) {
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#page-history .cat-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active'); renderAllList(cat);
 }
 
@@ -523,7 +768,7 @@ function refreshMonthly() {
         <div class="exp-info"><div class="exp-name" style="text-transform:capitalize">${cat}</div>
         <div class="exp-meta">${monthExp.filter(e=>e.category===cat).length} items</div></div>
         <div class="exp-amounts"><div class="exp-bdt" style="font-size:14px">€${total.toFixed(2)}</div>
-        <div class="exp-eur">${((total/VARIABLE_BUDGET)*100).toFixed(0)}% of variable</div></div>
+        <div class="exp-eur">${((total/VARIABLE_BUDGET)*100).toFixed(0)}% of budget</div></div>
       </div>`).join('')
     : '<div class="empty-state" style="padding:20px">No expenses this month.</div>';
 }
@@ -535,7 +780,7 @@ function showPage(id, navEl) {
   if (navEl) navEl.classList.add('active');
   if (id==='page-monthly') refreshMonthly();
   if (id==='page-history') renderAllList('all');
-  if (id==='page-items') renderItemsList('');
+  if (id==='page-dict') renderDictPage('');
 }
 
 function showToast(msg) {
